@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: rgba(0, 0, 0, 0.7);
+            margin: 0;
+            height: 100vh;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #2c2f33;
+            color: #ffffff;
+            width: 400px;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            color: #7289da;
+        }
+
+        .player-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #4a4a4a;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #23272a;
+        }
+
+        .player {
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: #2c2f33;
+            border: 1px solid #4a4a4a;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .player:hover {
+            background-color: #3e4247;
+        }
+
+        .player span {
+            display: block;
+        }
+
+        .player .name {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .player .id {
+            font-size: 12px;
+            color: #b9bbbe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Players Online</h2>
+        <div class="player-list" id="players"></div>
+    </div>
+
+    <script>
+        // Listen for messages from the Lua script
+        window.addEventListener('message', function(event) {
+            var data = event.data;
+            
+            if (data.type === "open") {
+                document.getElementById('players').innerHTML = ""; // Clear the list
+
+                // Add each player to the list
+                data.players.forEach(function(player) {
+                    var playerDiv = document.createElement('div');
+                    playerDiv.className = "player";
+                    
+                    // Add player name and ID
+                    playerDiv.innerHTML = `<span class="name">${player.name}</span><span class="id">ID: ${player.id}</span>`;
+                    document.getElementById('players').appendChild(playerDiv);
+                });
+
+                document.body.style.display = "flex"; // Show the UI
+            } else if (data.type === "close") {
+                document.body.style.display = "none"; // Hide the UI
+            }
+        });
+
+        // Close the menu when ESC is pressed
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                fetch(`https://${GetParentResourceName()}/close`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(resp => resp.json()).then(resp => console.log(resp));
+            }
+        });
+    </script>
+</body>
+</html>
