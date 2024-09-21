@@ -1,0 +1,1 @@
+This is my first FiveM script that i made really quick. The script lets you see all current online players and thei ID for your FiveM server. You can change or do whatever you want with it except sell it because it's a free script ofc. I've only tested it with one person but will test it further in the future and if it's buggy i will fix it and add a new release.
